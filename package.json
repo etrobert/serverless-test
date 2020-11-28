@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "npm run dev",
+    "predev": "if [ ! -d functions-build ]; then npm run build:functions; fi",
     "dev": "netlify dev",
     "dev-all": "npm-run-all --parallel dev:*",
     "dev:frontend": "webpack serve",
