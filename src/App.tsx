@@ -1,26 +1,21 @@
 import React, { useEffect, useState } from 'react';
 import { hot } from 'react-hot-loader';
 import './App.css';
+import { Todo } from './Todo';
+import useTodos, { Status } from './useTodos';
 
 function App() {
-  const [message, setMessage] = useState<string>('Loading');
-  useEffect(() => {
-    const loadMessage = async () => {
-      const response = await fetch('.netlify/functions/todos-read-all');
-      if (!response.ok) {
-        setMessage('Error');
-        return;
-      }
-      const message = await response.text();
-      setMessage(message);
-    };
-    loadMessage();
-  }, []);
-  return (
-    <div className="App">
-      <h1>{message}</h1>
-    </div>
-  );
+  const { status, todos } = useTodos();
+  const renderContent = () => {
+    // prettier-ignore
+    switch (status) {
+      case Status.Loading: return <p>Loading</p>;
+      case Status.Error: return <p>Error</p>;
+      case Status.Done: return <ul>{todos.map(renderTodo)}</ul>;
+    }
+  };
+  const renderTodo = (todo: Todo) => <li key={todo.id}>{todo.name}</li>;
+  return <div className="App">{renderContent()}</div>;
 }
 
 export default hot(module)(App);
