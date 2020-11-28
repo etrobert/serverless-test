@@ -2,3 +2,8 @@
   functions = "functions-build"
   command = "npm run build"
   publish = "dist"
+
+[dev]
+  framework = "#custom"
+  command = "npm run dev-all"
+  targetPort = 3000
