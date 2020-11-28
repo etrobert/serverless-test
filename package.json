@@ -4,13 +4,22 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "webpack serve",
-    "build": "webpack",
+    "start": "npm run dev",
+    "predev": "if [ ! -d functions-build ]; then npm run build:functions; fi",
+    "dev": "netlify dev",
+    "dev-all": "npm-run-all --parallel dev:*",
+    "dev:frontend": "webpack serve",
+    "dev:functions": "tsc --build functions --watch --preserveWatchOutput",
+    "build": "npm-run-all build:*",
+    "build:frontend": "webpack",
+    "build:functions": "tsc --build functions",
+    "clean": "rm -rf functions-build dist",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "@types/aws-lambda": "^8.10.64",
     "@types/react": "^16.9.55",
     "@types/react-dom": "^16.9.9",
     "@typescript-eslint/eslint-plugin": "^4.6.1",
@@ -20,6 +29,8 @@
     "eslint-plugin-react": "^7.21.5",
     "eslint-plugin-react-hooks": "^4.2.0",
     "html-webpack-plugin": "^4.5.0",
+    "netlify-cli": "^2.69.0",
+    "npm-run-all": "^4.1.5",
     "style-loader": "^2.0.0",
     "ts-loader": "^8.0.7",
     "typescript": "^4.0.5",
@@ -28,6 +39,7 @@
     "webpack-dev-server": "^3.11.0"
   },
   "dependencies": {
+    "axios": "^0.21.0",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
     "react-hot-loader": "^4.13.0"
