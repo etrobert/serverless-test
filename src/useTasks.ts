@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Todo } from './Todo';
+import { Task } from './Task';
 
 const enum Status {
   Loading,
@@ -7,27 +7,27 @@ const enum Status {
   Done,
 }
 
-function useTodos() {
+function useTasks() {
   const [status, setStatus] = useState<Status>(Status.Loading);
-  const [todos, setTodos] = useState<Todo[]>([]);
+  const [tasks, setTasks] = useState<Task[]>([]);
 
   useEffect(() => {
-    const loadTodos = async () => {
-      const response = await fetch('.netlify/functions/todos-read-all');
+    const loadTasks = async () => {
+      const response = await fetch('.netlify/functions/tasks-read-all');
       if (!response.ok) {
         setStatus(Status.Error);
         return;
       }
-      const todos = await response.json();
+      const tasks = await response.json();
       // TODO check response
-      setTodos(todos);
+      setTasks(tasks);
       setStatus(Status.Done);
     };
-    loadTodos();
+    loadTasks();
   }, []);
 
-  return { status, todos };
+  return { status, tasks };
 }
 
-export default useTodos;
+export default useTasks;
 export { Status };
