@@ -1,20 +1,20 @@
 import React, { useEffect, useState } from 'react';
 import { hot } from 'react-hot-loader';
 import './App.css';
-import { Todo } from './Todo';
-import useTodos, { Status } from './useTodos';
+import { Task } from './Task';
+import useTasks, { Status } from './useTasks';
 
 function App() {
-  const { status, todos } = useTodos();
+  const { status, tasks } = useTasks();
   const renderContent = () => {
     // prettier-ignore
     switch (status) {
       case Status.Loading: return <p>Loading</p>;
       case Status.Error: return <p>Error</p>;
-      case Status.Done: return <ul>{todos.map(renderTodo)}</ul>;
+      case Status.Done: return <ul>{tasks.map(renderTask)}</ul>;
     }
   };
-  const renderTodo = (todo: Todo) => <li key={todo.id}>{todo.name}</li>;
+  const renderTask = (task: Task) => <li key={task.id}>{task.name}</li>;
   return <div className="App">{renderContent()}</div>;
 }
 
