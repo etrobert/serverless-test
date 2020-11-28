@@ -2,6 +2,12 @@
 
 Base React project with what I like and nothing more.
 
+## Notes
+
+Because of a [bug](https://github.com/netlify/cli/issues/638)
+with `netlify dev` using _built functions_,
+**build the functions once before live reloading**.
+
 ## Technologies used
 
 ### Framework + Build tools
