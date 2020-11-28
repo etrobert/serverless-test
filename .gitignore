@@ -1,3 +1,11 @@
+# Npm packages
 node_modules
+
+# Frontend distribution
 dist
+
+# Netlify (AWS) functions build
 functions-build
+
+# Local Netlify folder
+.netlify
