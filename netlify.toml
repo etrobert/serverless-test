@@ -7,3 +7,6 @@
   framework = "#custom"
   command = "npm run dev-all"
   targetPort = 3000
+
+[template.environment]
+  FAUNA_SECRET_KEY = "Your FaunaDB Server Secret"
