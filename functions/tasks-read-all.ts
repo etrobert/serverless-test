@@ -1,14 +1,23 @@
-import { APIGatewayProxyEvent, Context } from 'aws-lambda';
-import { Task } from '../src/Task';
-import axios from 'axios';
+import { Task, Status as TaskStatus } from '../src/Task';
+import handleError from './utils/handleError';
+import sendQuery from './utils/sendQuery';
+
+interface Answer {
+  allTasks: {
+    data: AnswerItem[];
+  };
+}
 
 interface AnswerItem {
   _id: string;
   name: string;
+  status: TaskStatus;
 }
-const renameId = (task: AnswerItem) => ({ id: task._id, name: task.name });
-
-const ok = (httpStatus: number) => httpStatus >= 200 && httpStatus < 300;
+const renameId = (task: AnswerItem) => ({
+  id: task._id,
+  name: task.name,
+  status: task.status,
+});
 
 const query = `
   query {
@@ -16,6 +25,7 @@ const query = `
       data {
         _id
         name
+        status
       }
     }
   }
@@ -23,24 +33,13 @@ const query = `
 
 // Warning: context includes properties and methods specific to Netlify
 // such as Netlify Identity
-exports.handler = async (event: APIGatewayProxyEvent, context: Context) => {
+exports.handler = async () => {
   try {
-    const { status, data } = await axios({
-      url: 'https://graphql.fauna.com/graphql',
-      method: 'POST',
-      headers: {
-        Authorization: `Bearer ${process.env.FAUNA_SECRET_KEY}`,
-      },
-      data: {
-        query,
-        variables: {},
-      },
-    });
-    if (!ok(status)) return { statusCode: status, body: JSON.stringify(data) };
-
-    const tasks: Task[] = data.data.allTasks.data.map(renameId);
+    const data = (await sendQuery(query)) as Answer;
+    // TODO Validate the response
+    const tasks: Task[] = data.allTasks.data.map(renameId);
     return { statusCode: 200, body: JSON.stringify(tasks) };
-  } catch (err) {
-    return { statusCode: 500, body: JSON.stringify({ msg: err.msg }) };
+  } catch (error) {
+    return handleError(error);
   }
 };
